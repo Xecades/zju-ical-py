@@ -1,7 +1,7 @@
 # ZJU-ICAL-PY
 
 > [!NOTE]
-> 本项目是基于 ZJU-ICAL 项目的 Python 重构版本，更换了调用 API，目前**只支持本科生课程表**生成。本文档部分参考原项目的 README。
+> 本项目是基于 [ZJU-ICAL 项目](https://github.com/cxz66666/zju-ical)的 Python 重构版本，更换了调用 API，目前**只支持本科生课程表**生成。本文档部分参考原项目的 README。
 >
 > 原项目按 LGPL-2.1 协议开源，本项目继承了原项目的协议。
 
