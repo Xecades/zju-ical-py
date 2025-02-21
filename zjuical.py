@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     config.load(args.config)
     cal = getCalender(args.username, args.password)
-    with open(args.output, "w") as f:
+    with open(args.output, "w", encoding="utf-8") as f:
         log.info(f"正在写入文件 {args.output}")
         f.write(cal)
 

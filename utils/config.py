@@ -49,7 +49,7 @@ class Config:
             log.error(f"配置文件 {path} 不存在")
             exit(1)
 
-        self.config = json.load(open(path, "r"))
+        self.config = json.load(open(path, "r", encoding="utf-8"))
         self.lastUpdated = isoToDate(self.config["lastUpdated"])
         self.classTerms = []
         self.termConfigs = []
