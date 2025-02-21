@@ -2,3 +2,4 @@
 __pycache__
 *.ics
 *.local*
+.DS_Store
