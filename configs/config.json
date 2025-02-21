@@ -1,0 +1,52 @@
+{
+    "lastUpdated": 20250220,
+    "tweaks": [
+        {
+            "TweakType": "Clear",
+            "Description": "[清明节] 4月4日（周五）停课，不统一安排补课",
+            "From": 20250404,
+            "To": 20250404
+        },
+        {
+            "TweakType": "Clear",
+            "Description": "[劳动节] 5月1日（周四）停课，不统一安排补课",
+            "From": 20250501,
+            "To": 20250501
+        },
+        {
+            "TweakType": "Exchange",
+            "Description": "[劳动节] 4月27日（周日）与5月5日（周一）的课对调",
+            "From": 20250427,
+            "To": 20250505
+        },
+        {
+            "TweakType": "Move",
+            "Description": "[劳动节] 5月2日（周五）停课，安排在6月9日（周一）补课",
+            "From": 20250502,
+            "To": 20250609
+        },
+        {
+            "TweakType": "Clear",
+            "Description": "[端午节] 6月2日（周一）停课，不统一安排补课",
+            "From": 20250602,
+            "To": 20250602
+        }
+    ],
+    "termConfigs": [
+        {
+            "Year": "2024-2025",
+            "Term": "春",
+            "Begin": 20250217,
+            "End": 20250413,
+            "FirstWeekNo": 1
+        },
+        {
+            "Year": "2024-2025",
+            "Term": "夏",
+            "Begin": 20250414,
+            "End": 20250608,
+            "FirstWeekNo": 1
+        }
+    ],
+    "classTerms": ["2024-2025:春", "2024-2025:夏"]
+}

@@ -1,0 +1,51 @@
+import os
+import argparse
+from utils.config import config
+from utils.logger import getLogger
+from main.integration import getCalender
+
+log = getLogger(__name__)
+
+if __name__ == "__main__":
+    def formatter(prog):
+        return argparse.HelpFormatter(prog, max_help_position=52)
+
+    parser = argparse.ArgumentParser(
+        prog="zjuical-py",
+        description="A command-line utility for generating \
+            class schedule iCalender file from extracting \
+            data from ZJU ZDBK API. Refactored based \
+            on Python by Xecades.",
+        formatter_class=formatter
+    )
+    parse = parser.add_argument
+
+    parse("-u", "--username", type=str, help="ZJUAM username")
+    parse("-p", "--password", type=str, help="ZJUAM password")
+    parse("-c", "--config", type=str, default="configs/config.json",
+          help="config file (default \"configs/config.json\")")
+    parse("-o", "--output", type=str, default="zjuical.ics",
+          help="output file (default \"zjuical.ics\")")
+    parse("-f", "--force", action="store_true",
+          help="force write to target file")
+    parse("-v", "--version", action="version",
+          version="%(prog)s v1.0.0", help="version for zjuical")
+
+    args = parser.parse_args()
+
+    log.info("ZJU-ICAL-PY (v1.0.0) by Xecades")
+
+    if os.path.exists(args.output):
+        if not args.force:
+            log.error(f"输出文件 {args.output} 已存在，请使用 -f 参数强制覆盖")
+            exit(1)
+        else:
+            log.warning(f"输出文件 {args.output} 已存在，将被覆盖")
+
+    config.load(args.config)
+    cal = getCalender(args.username, args.password)
+    with open(args.output, "w") as f:
+        log.info(f"正在写入文件 {args.output}")
+        f.write(cal)
+
+    log.info(f"日历文件生成完毕")
