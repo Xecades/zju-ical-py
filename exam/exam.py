@@ -129,6 +129,6 @@ class ExamTable:
                     ))
         except Exception as e:
             log.error(f"考试日历事件生成失败: {e}")
-            exit(1)
+            raise e
 
         return events

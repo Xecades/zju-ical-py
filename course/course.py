@@ -153,7 +153,7 @@ class CourseTable:
             self.courses = list(filter(lambda c: c is not None, self.courses))
         except Exception as e:
             log.error(f"课程表合并失败: {e}")
-            exit(1)
+            raise e
 
     def GetClassOfDay(self, day: int, term: int) -> list[Course]:
         res = []
@@ -234,6 +234,6 @@ class CourseTable:
                     ))
         except Exception as e:
             log.error(f"课程表日历事件生成失败: {e}")
-            exit(1)
+            raise e
 
         return events

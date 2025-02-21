@@ -32,7 +32,7 @@ class UgrsZjuam(Zjuam):
             assert csrf, "CSRF Key 为空"
         except Exception as e:
             log.error(f"CSRF Key 获取失败: {e}")
-            exit(1)
+            raise e
         log.info("CSRF Key 获取成功")
 
         # stage 2: get pub key
@@ -46,7 +46,7 @@ class UgrsZjuam(Zjuam):
             cipher = "0" * (128 - len(cipher)) + cipher
         except Exception as e:
             log.error(f"RSA 公钥获取失败: {e}")
-            exit(1)
+            raise e
         log.info("RSA 公钥获取成功")
 
         # stage 3: fire target
@@ -62,7 +62,7 @@ class UgrsZjuam(Zjuam):
             assert "账号被锁定" not in res.text, "输错密码次数太多，账号被锁定，请过段时间再使用"
         except Exception as e:
             log.error(f"ZJUAM 登录失败: {e}")
-            exit(1)
+            raise e
         log.info("ZJUAM 登录成功")
 
     def getCourses(self, year: str, term: Term) -> CourseTable:
@@ -81,7 +81,7 @@ class UgrsZjuam(Zjuam):
             ct.merge()
         except Exception as e:
             log.error(f"课程信息获取失败: {e}")
-            exit(1)
+            raise e
         log.info(f"[{year}-{term.value}]课程信息获取成功")
         return ct
 
@@ -94,6 +94,6 @@ class UgrsZjuam(Zjuam):
             et.fromZdbk(res)
         except Exception as e:
             log.error(f"考试信息获取失败: {e}")
-            exit(1)
+            raise e
         log.info("考试信息获取成功")
         return et

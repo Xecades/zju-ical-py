@@ -10,7 +10,7 @@ log = getLogger(__name__)
 def getCalender(username: str, password: str) -> str:
     if not username.startswith("3"):
         log.error("当前只支持本科生日历生成，欢迎有能力的同学提交 PR 到本项目仓库")
-        exit(1)
+        raise NotImplementedError("不支持的用户类型")
 
     zjuam = UgrsZjuam(username, password)
     zjuam.login()
