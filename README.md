@@ -36,7 +36,13 @@ pip install -r requirements.txt
 python zjuical.py -u [username] -p [password]
 ```
 
-其中 `[username]` 为浙江大学统一认证用户名，`[password]` 为统一认证密码，运行后即可在当前目录下生成 `zjuical.ics` 文件，导入到日历应用即可，更多的参数请使用 `python zjuical.py --help` 查看。
+其中 `[username]` 为浙江大学统一身份认证用户名（即学号），`[password]` 为统一认证密码，无需方括号。例如，假如你的学号为 3230100000，密码为 123456，那么你需要运行：
+
+```sh
+python zjuical.py -u 3230100000 -p 123456
+```
+
+运行后即可在当前目录下生成 `zjuical.ics` 文件，导入到日历应用即可，更多的参数请使用 `python zjuical.py --help` 查看。
 
 ## 开发计划
 
