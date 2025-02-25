@@ -5,13 +5,14 @@ from utils.logger import getLogger
 from main.integration import getCalender
 
 log = getLogger(__name__)
+VERSION = "1.0.1"
 
 if __name__ == "__main__":
     def formatter(prog):
         return argparse.HelpFormatter(prog, max_help_position=52)
 
     parser = argparse.ArgumentParser(
-        prog="zjuical-py",
+        prog="zjuical.py",
         description="A command-line utility for generating \
             class schedule iCalender file from extracting \
             data from ZJU ZDBK API. Refactored based \
@@ -28,12 +29,14 @@ if __name__ == "__main__":
           help="output file (default \"zjuical.ics\")")
     parse("-f", "--force", action="store_true",
           help="force write to target file")
+    parse("--skip-verification", action="store_true",
+          help="skip verification for non-undergraduate account")
     parse("-v", "--version", action="version",
-          version="%(prog)s v1.0.0", help="version for zjuical")
+          version=f"%(prog)s v{VERSION}", help="version for zjuical")
 
     args = parser.parse_args()
 
-    log.info("ZJU-ICAL-PY (v1.0.0) by Xecades")
+    log.info(f"ZJU-ICAL-PY (v{VERSION}) by Xecades")
 
     if os.path.exists(args.output):
         if not args.force:
@@ -43,7 +46,7 @@ if __name__ == "__main__":
             log.warning(f"输出文件 {args.output} 已存在，将被覆盖")
 
     config.load(args.config)
-    cal = getCalender(args.username, args.password)
+    cal = getCalender(args.username, args.password, args.skip_verification)
     with open(args.output, "w", encoding="utf-8") as f:
         log.info(f"正在写入文件 {args.output}")
         f.write(cal)

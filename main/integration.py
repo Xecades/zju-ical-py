@@ -7,10 +7,14 @@ from zjuam.ugrs import UgrsZjuam
 log = getLogger(__name__)
 
 
-def getCalender(username: str, password: str) -> str:
+def getCalender(username: str, password: str, skip_verification: bool) -> str:
     if not username.startswith("3"):
-        log.error("当前只支持本科生日历生成，欢迎有能力的同学提交 PR 到本项目仓库")
-        raise NotImplementedError("不支持的用户类型")
+        if skip_verification:
+            log.warning("跳过学号验证")
+        else:
+            log.error("学号不以 3 开头，不确保本项目能在非本科生账号使用")
+            log.info("你可以通过 --skip-verification 参数跳过此检查，同时欢迎向作者反馈非本科生账号使用情况")
+            raise NotImplementedError("不支持的用户类型")
 
     zjuam = UgrsZjuam(username, password)
     zjuam.login()
