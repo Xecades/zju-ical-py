@@ -5,7 +5,7 @@ from utils.logger import getLogger
 from main.integration import getCalender
 
 log = getLogger(__name__)
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 
 if __name__ == "__main__":
     def formatter(prog):

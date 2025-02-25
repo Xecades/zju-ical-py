@@ -1,7 +1,6 @@
 from datetime import datetime
 from utils.const import ExamType
 from exam.convert import parseExamDateTime
-from course.course import CourseTable, Course
 from ical.ical import Event
 from utils.logger import getLogger
 
@@ -29,7 +28,7 @@ class Exam:
         self.isEventGenerated = False
 
         self.examType = examType
-        self.classId = raw["xkkh"]  # 选课课号
+        self.classId = raw["xkkh"][:22]  # 选课课号
         self.name = raw["kcmc"].replace("(", "（").replace(")", "）")  # 课程名称
         self.credit = float(raw["xf"])  # 学分
 
@@ -76,7 +75,7 @@ class Exam:
 
     @property
     def description(self) -> str:
-        return "学分: %.1f\n" % self.credit
+        return "学分: %.1f" % self.credit
 
 
 class ExamTable:
@@ -98,7 +97,7 @@ class ExamTable:
             if "qzkssj" not in item and "kssj" not in item:
                 self.exams.append(Exam(item, ZDBK, ExamType.NoExam))
 
-    def find(self, course: Course) -> list[Exam]:
+    def find(self, course: "Course") -> list[Exam]:
         res = []
         for exam in self.exams:
             if exam.classId == course.classId:
@@ -106,7 +105,7 @@ class ExamTable:
                 res.append(exam)
         return res
 
-    def toEvents(self, courses: CourseTable) -> list[Event]:
+    def toEvents(self, courses: "CourseTable") -> list[Event]:
         log.info("开始生成考试日历事件")
 
         try:

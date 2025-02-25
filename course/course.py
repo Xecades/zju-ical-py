@@ -27,12 +27,15 @@ class Course:
     terms: list[Term]
     timeString: str
     dayOfWeek: int
+    credit: None | float
 
     def __init__(self, raw: dict, scheme: str):
         if scheme != Course.SCHEME_ZDBK:
             raise NotImplementedError("不支持的课程查询方案")
 
-        self.classId = raw["xkkh"]  # 选课课号
+        self.credit = None
+        # 不确定为什么要截取前22位，但Celechron是这样做的
+        self.classId = raw["xkkh"][:22]  # 选课课号
         self.dayOfWeek = int(raw["xqj"])  # 星期几
 
         # 单双周
@@ -135,6 +138,13 @@ class CourseTable:
             c = Course(raw, Course.SCHEME_ZDBK)
             self.courses.append(c)
 
+    def communicate(self, exams: "ExamTable") -> None:
+        for course in self.courses:
+            examsOfCourse = exams.find(course)
+            if len(examsOfCourse) == 0:
+                continue
+            course.credit = examsOfCourse[0].credit
+
     def merge(self) -> None:
         log.info("开始相连时段课程表合并")
         try:
@@ -220,7 +230,10 @@ class CourseTable:
                     if not isCurrentDateEvenWeek and course.weekType == WeekType.EvenOnly:
                         continue
 
-                    description = f"教师: {course.teacher}\\n{course.arrangementString}"
+                    description = f"教师: {course.teacher}"
+                    if course.credit is not None:
+                        description += "\\n学分: %.1f" % course.credit
+                    description += f"\\n{course.arrangementString}"
                     if dateOfClass in modDescriptions:
                         description = modDescriptions[dateOfClass] + \
                             "\\n\\n" + description

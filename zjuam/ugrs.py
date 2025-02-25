@@ -65,7 +65,7 @@ class UgrsZjuam(Zjuam):
             raise e
         log.info("ZJUAM 登录成功")
 
-    def getCourses(self, year: str, term: Term) -> CourseTable:
+    def getCourses(self, year: str, term: Term, exams: ExamTable) -> CourseTable:
         log.info(f"开始获取[{year}-{term.value}]课程信息")
         try:
             termQuery = ugrsClassTermToQueryString(term)
@@ -79,6 +79,7 @@ class UgrsZjuam(Zjuam):
             ct = CourseTable()
             ct.fromZdbk(res)
             ct.merge()
+            ct.communicate(exams)
         except Exception as e:
             log.error(f"课程信息获取失败: {e}")
             raise e

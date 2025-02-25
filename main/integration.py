@@ -36,7 +36,7 @@ def getCalender(username: str, password: str, skip_verification: bool) -> str:
             log.error(f"配置文件错误，未找到 {item.Year}-{item.Term.value} 的学期配置")
             exit(1)
 
-        courses = zjuam.getCourses(item.Year, item.Term)
+        courses = zjuam.getCourses(item.Year, item.Term, exams)
         courseEvents = courses.toEvents(termConfig=tc)
         examEvents = exams.toEvents(courses)
 
