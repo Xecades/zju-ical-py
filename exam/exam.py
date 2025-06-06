@@ -3,6 +3,7 @@ from utils.const import ExamType
 from exam.convert import parseExamDateTime
 from ical.ical import Event
 from utils.logger import getLogger
+from course.course import Course, CourseTable
 
 log = getLogger(__name__)
 
