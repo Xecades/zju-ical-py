@@ -1,6 +1,6 @@
 from datetime import datetime
 from utils.const import ExamType
-from exam.convert import parseExamDateTime
+from exam.convert import parseExamDateTime, DUMMY_DATE
 from ical.ical import Event
 from utils.logger import getLogger
 from course.course import Course, CourseTable
@@ -47,6 +47,9 @@ class Exam:
             self.location = None
             self.seat = None
 
+        if self.start == self.end == DUMMY_DATE:
+            log.info(
+                f"{self.examType.value}: {self.name} {self.classId} (考试时间获取失败，可能是由于校历未发布无法计算时间，通常不影响当前学期日历，请参见 GitHub #3)")
         log.info(f"{self.examType.value}: {self.name} {self.classId}")
 
     def __repr__(self) -> str:
