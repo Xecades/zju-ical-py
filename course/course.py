@@ -204,6 +204,8 @@ class CourseTable:
                     shadowDates[tweak.From] = tweak.To
                     modDescriptions[tweak.To] = tweak.Description
                     modDescriptions[tweak.From] = tweak.Description
+                elif tweak.TweakType == TweakMethod.Pending:
+                    pass
                 else:
                     raise ValueError(f"未知的调整类型: {tweak.TweakType}")
 

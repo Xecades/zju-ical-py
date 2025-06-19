@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from utils.const import Term, TweakMethod
 from course.convert import isoToDate
 from loguru import logger
+from collections import defaultdict
 
 
 @dataclass
@@ -39,6 +40,12 @@ class Config:
 
     def __init__(self) -> None:
         pass
+
+    def toTermString(self) -> str:
+        terms = defaultdict(str)
+        for ct in self.classTerms:
+            terms[ct.Year] += f"{ct.Term.value}"
+        return ", ".join(f"{year} {terms[year]}" for year in sorted(terms.keys()))
 
     def load(self, path: str) -> None:
         logger.info("开始读取配置文件")

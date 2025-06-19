@@ -41,4 +41,4 @@ def getCalender(username: str, password: str, skip_verification: bool) -> str:
         cal.addEvents(courseEvents)
         cal.addEvents(examEvents)
 
-    return cal.getICS()
+    return cal.getICS(icalName=config.toTermString() + "课程表")
