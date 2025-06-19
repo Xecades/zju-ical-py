@@ -2,9 +2,7 @@ from datetime import datetime, UTC
 from dataclasses import dataclass
 from course.convert import toISOString
 from hashlib import sha1
-from utils.logger import getLogger
-
-log = getLogger(__name__)
+from loguru import logger
 
 
 @dataclass
@@ -60,7 +58,7 @@ class Calender:
         self.events.extend(events)
 
     def getICS(self, icalName: str = "ZJU-ICAL 课程表") -> str:
-        log.info("开始生成日历文件")
+        logger.info("开始生成日历文件")
         res = f"BEGIN:VCALENDAR\r\nX-WR-CALNAME:{icalName}\r\nX-APPLE-CALENDAR-COLOR:#2BBFF0\r\nPRODID:-//ZJU-ICAL-PY//Ejector 0.2//EN\r\nVERSION:2.0\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Asia/Shanghai\r\nBEGIN:STANDARD\r\nDTSTART:16010101T000000\r\nTZOFFSETFROM:+0800\r\nTZOFFSETTO:+0800\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\n"
         for event in self.events:
             res += event.string

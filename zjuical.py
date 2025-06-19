@@ -1,10 +1,9 @@
 import os
 import argparse
+from loguru import logger
 from utils.config import config
-from utils.logger import getLogger
 from main.integration import getCalender
 
-log = getLogger(__name__)
 VERSION = "1.0.2"
 
 if __name__ == "__main__":
@@ -36,19 +35,19 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    log.info(f"ZJU-ICAL-PY (v{VERSION}) by Xecades")
+    logger.info(f"ZJU-ICAL-PY (v{VERSION}) by Xecades")
 
     if os.path.exists(args.output):
         if not args.force:
-            log.error(f"输出文件 {args.output} 已存在，请使用 -f 参数强制覆盖")
+            logger.error(f"输出文件 {args.output} 已存在，请使用 -f 参数强制覆盖")
             exit(1)
         else:
-            log.warning(f"输出文件 {args.output} 已存在，将被覆盖")
+            logger.warning(f"输出文件 {args.output} 已存在，将被覆盖")
 
     config.load(args.config)
     cal = getCalender(args.username, args.password, args.skip_verification)
     with open(args.output, "w", encoding="utf-8") as f:
-        log.info(f"正在写入文件 {args.output}")
+        logger.info(f"正在写入文件 {args.output}")
         f.write(cal)
 
-    log.info(f"日历文件生成完毕")
+    logger.success(f"日历文件生成完毕")

@@ -1,11 +1,9 @@
 from utils.const import Term, WeekType, TweakMethod
 from utils.config import config, TermConfig
-from utils.logger import getLogger
+from loguru import logger
 from datetime import date, datetime, timedelta
 from course.convert import isEvenWeek, periodToTime, dayOfWeekToWeekString
 from ical.ical import Event
-
-log = getLogger(__name__)
 
 
 def daterange(start: date, end: date):
@@ -72,7 +70,7 @@ class Course:
         self.end = self.start + int(raw["skcd"])  # 上课长度
 
         weekString = dayOfWeekToWeekString(self.dayOfWeek)
-        log.info(f"{self.name}: {weekString} / {self.start}-{self.end - 1}")
+        logger.info(f"{self.name}: {weekString} / {self.start}-{self.end - 1}")
 
     def __repr__(self) -> str:
         res = "Course(\n"
@@ -146,7 +144,7 @@ class CourseTable:
             course.credit = examsOfCourse[0].credit
 
     def merge(self) -> None:
-        log.info("开始相连时段课程表合并")
+        logger.info("开始相连时段课程表合并")
         try:
             for i in range(len(self.courses)):
                 if self.courses[i] is None:
@@ -162,7 +160,7 @@ class CourseTable:
                         self.courses[j] = None
             self.courses = list(filter(lambda c: c is not None, self.courses))
         except Exception as e:
-            log.error(f"课程表合并失败: {e}")
+            logger.error(f"课程表合并失败: {e}")
             raise e
 
     def GetClassOfDay(self, day: int, term: int) -> list[Course]:
@@ -173,7 +171,7 @@ class CourseTable:
         return res
 
     def toEvents(self, termConfig: TermConfig) -> list[Event]:
-        log.info("开始生成课程表日历事件")
+        logger.info("开始生成课程表日历事件")
 
         try:
             termBegin = termConfig.Begin
@@ -246,7 +244,7 @@ class CourseTable:
                         end=course.getEndDateTime(actualDate)
                     ))
         except Exception as e:
-            log.error(f"课程表日历事件生成失败: {e}")
+            logger.error(f"课程表日历事件生成失败: {e}")
             raise e
 
         return events

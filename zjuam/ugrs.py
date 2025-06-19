@@ -1,15 +1,11 @@
 # Undergraduate Students
 import re
-import json
-import requests
 from zjuam.base import Zjuam
 from course.course import CourseTable
 from exam.exam import ExamTable
 from utils.const import Term
-from utils.logger import getLogger
+from loguru import logger
 from course.convert import ugrsClassTermToQueryString
-
-log = getLogger(__name__)
 
 
 class UgrsZjuam(Zjuam):
@@ -21,7 +17,7 @@ class UgrsZjuam(Zjuam):
         super().__init__(username, password)
 
     def login(self) -> None:
-        log.info("开始通过 ZJUAM 本科生途径登录")
+        logger.info("开始通过 ZJUAM 本科生途径登录")
 
         # stage 1: get csrf key
         try:
@@ -31,9 +27,9 @@ class UgrsZjuam(Zjuam):
             csrf = re.search(regex, res.text).group(1)
             assert csrf, "CSRF Key 为空"
         except Exception as e:
-            log.error(f"CSRF Key 获取失败: {e}")
+            logger.error(f"CSRF Key 获取失败: {e}")
             raise e
-        log.info("CSRF Key 获取成功")
+        logger.success("CSRF Key 获取成功")
 
         # stage 2: get pub key
         try:
@@ -45,9 +41,9 @@ class UgrsZjuam(Zjuam):
             cipher = hex(pow(plain, E, N))[2:]
             cipher = "0" * (128 - len(cipher)) + cipher
         except Exception as e:
-            log.error(f"RSA 公钥获取失败: {e}")
+            logger.error(f"RSA 公钥获取失败: {e}")
             raise e
-        log.info("RSA 公钥获取成功")
+        logger.success("RSA 公钥获取成功")
 
         # stage 3: fire target
         try:
@@ -61,12 +57,12 @@ class UgrsZjuam(Zjuam):
             assert "用户名或密码错误" not in res.text, "用户名或密码错误，请确保用户名密码正确后再运行程序，否则有账号被锁定的风险"
             assert "账号被锁定" not in res.text, "输错密码次数太多，账号被锁定，请过段时间再使用"
         except Exception as e:
-            log.error(f"ZJUAM 登录失败: {e}")
+            logger.error(f"ZJUAM 登录失败: {e}")
             raise e
-        log.info("ZJUAM 登录成功")
+        logger.success("ZJUAM 登录成功")
 
     def getCourses(self, year: str, term: Term, exams: ExamTable) -> CourseTable:
-        log.info(f"开始获取[{year}-{term.value}]课程信息")
+        logger.info(f"开始获取[{year}-{term.value}]课程信息")
         try:
             termQuery = ugrsClassTermToQueryString(term)
             assert termQuery, "学期参数错误"
@@ -81,20 +77,20 @@ class UgrsZjuam(Zjuam):
             ct.merge()
             ct.communicate(exams)
         except Exception as e:
-            log.error(f"课程信息获取失败: {e}")
+            logger.error(f"课程信息获取失败: {e}")
             raise e
-        log.info(f"[{year}-{term.value}]课程信息获取成功")
+        logger.success(f"[{year}-{term.value}]课程信息获取成功")
         return ct
 
     def getExams(self, count: int = 5000) -> ExamTable:
-        log.info("开始获取考试信息")
+        logger.info("开始获取考试信息")
         try:
             res = self.r.post(self.EXAM_URL % count).json()
             res = res["items"]
             et = ExamTable()
             et.fromZdbk(res)
         except Exception as e:
-            log.error(f"考试信息获取失败: {e}")
+            logger.error(f"考试信息获取失败: {e}")
             raise e
-        log.info("考试信息获取成功")
+        logger.success("考试信息获取成功")
         return et

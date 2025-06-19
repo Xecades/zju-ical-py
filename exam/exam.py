@@ -2,10 +2,8 @@ from datetime import datetime
 from utils.const import ExamType
 from exam.convert import parseExamDateTime, DUMMY_DATE
 from ical.ical import Event
-from utils.logger import getLogger
+from loguru import logger
 from course.course import Course, CourseTable
-
-log = getLogger(__name__)
 
 
 class Exam:
@@ -48,9 +46,9 @@ class Exam:
             self.seat = None
 
         if self.start == self.end == DUMMY_DATE:
-            log.info(
+            logger.info(
                 f"{self.examType.value}: {self.name} {self.classId} (考试时间获取失败，可能是由于校历未发布无法计算时间，通常不影响当前学期日历，请参见 GitHub #3)")
-        log.info(f"{self.examType.value}: {self.name} {self.classId}")
+        logger.info(f"{self.examType.value}: {self.name} {self.classId}")
 
     def __repr__(self) -> str:
         res = "Exam(\n"
@@ -110,7 +108,7 @@ class ExamTable:
         return res
 
     def toEvents(self, courses: "CourseTable") -> list[Event]:
-        log.info("开始生成考试日历事件")
+        logger.info("开始生成考试日历事件")
 
         try:
             events: list[Event] = []
@@ -131,7 +129,7 @@ class ExamTable:
                         end=exam.end
                     ))
         except Exception as e:
-            log.error(f"考试日历事件生成失败: {e}")
+            logger.error(f"考试日历事件生成失败: {e}")
             raise e
 
         return events
