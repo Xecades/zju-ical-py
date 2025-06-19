@@ -20,8 +20,8 @@ if __name__ == "__main__":
     )
     parse = parser.add_argument
 
-    parse("-u", "--username", type=str, help="ZJUAM username")
-    parse("-p", "--password", type=str, help="ZJUAM password")
+    parse("-u", "--username", type=str, required=True, help="ZJUAM username")
+    parse("-p", "--password", type=str, required=True, help="ZJUAM password")
     parse("-c", "--config", type=str, default="configs/config.json",
           help="config file (default \"configs/config.json\")")
     parse("-o", "--output", type=str, default="zjuical.ics",
