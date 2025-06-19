@@ -4,7 +4,7 @@ from loguru import logger
 from utils.config import config
 from main.integration import getCalender
 
-VERSION = "1.0.2"
+VERSION = "1.0.3"
 
 if __name__ == "__main__":
     def formatter(prog):
