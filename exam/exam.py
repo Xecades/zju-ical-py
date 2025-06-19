@@ -120,11 +120,13 @@ class ExamTable:
                     if exam.isEventGenerated:
                         continue
 
+                    desc_tail = f"\\n教师: {course.teacher}"
+
                     exam.isEventGenerated = True
                     events.append(Event(
                         summary=exam.summary,
                         location=exam.locationString,
-                        description=exam.description,
+                        description=exam.description + desc_tail,
                         start=exam.start,
                         end=exam.end
                     ))
