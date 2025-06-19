@@ -2,6 +2,18 @@
     "lastUpdated": 20250619,
     "tweaks": [
         {
+            "TweakType": "Clear",
+            "Description": "[国庆中秋] 10月1日（周三）至10月8日（周三）停课",
+            "From": 20251001,
+            "To": 20251008
+        },
+        {
+            "TweakType": "Clear",
+            "Description": "[元旦] 1月1日（周四）停课",
+            "From": 20260101,
+            "To": 20260101
+        },
+        {
             "TweakType": "Exchange",
             "Description": "[国庆中秋] 10月7日（周二）与9月28日（周日）的课对调",
             "From": 20251007,
