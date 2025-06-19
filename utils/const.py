@@ -25,6 +25,7 @@ class TweakMethod(Enum):
     Copy = "Copy"          # 从 From 复制到 To
     Move = "Move"          # 从 From 移动到 To
     Exchange = "Exchange"  # 交换 From 和 To 的课程
+    Pending = "Pending"    # 待定，不起任何作用
 
 
 @unique

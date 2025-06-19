@@ -1,0 +1,52 @@
+{
+    "lastUpdated": 20250619,
+    "tweaks": [
+        {
+            "TweakType": "Exchange",
+            "Description": "[国庆中秋] 10月7日（周二）与9月28日（周日）的课对调",
+            "From": 20251007,
+            "To": 20250928
+        },
+        {
+            "TweakType": "Exchange",
+            "Description": "[国庆中秋] 10月8日（周三）与10月11日（周六）的课对调",
+            "From": 20251008,
+            "To": 20251011
+        },
+        {
+            "TweakType": "Move",
+            "Description": "[秋季校运会] 10月24日（周五）停课，安排在10月18日（周六）补课",
+            "From": 20251024,
+            "To": 20251018
+        },
+        {
+            "TweakType": "Move",
+            "Description": "[学生节] 12月31日（周三）停课，安排在1月5日（周一）补课",
+            "From": 20251231,
+            "To": 20260105
+        },
+        {
+            "TweakType": "Pending",
+            "Description": "[元旦] 调休安排另行通知",
+            "From": 20260101,
+            "To": 20260101
+        }
+    ],
+    "termConfigs": [
+        {
+            "Year": "2025-2026",
+            "Term": "秋",
+            "Begin": 20250915,
+            "End": 20251109,
+            "FirstWeekNo": 1
+        },
+        {
+            "Year": "2025-2026",
+            "Term": "冬",
+            "Begin": 20251110,
+            "End": 20260104,
+            "FirstWeekNo": 1
+        }
+    ],
+    "classTerms": ["2025-2026:秋", "2025-2026:冬"]
+}
