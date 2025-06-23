@@ -58,13 +58,14 @@ def run_zjuical(zjuical_args: str):
 
 
 def periodic_task(zjuical_args: str):
-    try:
-        git_pull()
-        run_zjuical(zjuical_args)
-    except Exception as e:
-        logger.error(f"Periodic task 错误: {e}")
-    logger.info(f"等待 {INTERVAL} 秒后再次执行任务...")
-    time.sleep(INTERVAL)
+    while True:
+        try:
+            git_pull()
+            run_zjuical(zjuical_args)
+        except Exception as e:
+            logger.error(f"Periodic task 错误: {e}")
+        logger.info(f"等待 {INTERVAL} 秒后再次执行任务...")
+        time.sleep(INTERVAL)
 
 
 @app.route("/zjuical.ics")
