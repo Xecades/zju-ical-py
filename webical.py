@@ -1,5 +1,6 @@
 import time
 import sys
+import shlex
 import argparse
 import subprocess
 import threading
@@ -49,7 +50,7 @@ def git_pull():
 
 def run_zjuical(zjuical_args: str):
     executable = sys.executable
-    cmd = [executable, "zjuical.py"] + zjuical_args.split()
+    cmd = [executable, "zjuical.py"] + shlex.split(zjuical_args)
     logger.info("启动 zjuical.py...")
     print()
     subprocess.run(cmd)
