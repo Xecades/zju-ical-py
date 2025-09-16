@@ -54,6 +54,8 @@ python zjuical.py -u 3230100000 -p '123456'
 
 > [!CAUTION]
 > 部分日历软件要求订阅链接**可在公网访问**，例如 Apple Calendar。因此以下步骤假定你已拥有一个公网 IP 或域名。除此之外，**理论上**日历的爬取是需要 ZJU 校网的，因此可能需要使用 [zju-connect](https://github.com/Mythologyli/zju-connect) 等工具在服务器上部署校网 VPN。（但是本人在测试的时候发现偶尔不需要校网也能访问，如果你能正常使用可以忽略这一步）
+>
+> **注意**：当前 `webical.py` 未做 HTTP Auth 鉴权，因此任何人只要知道你的公网 IP 和端口号就能访问你的日历文件，存在一定的隐私风险，请谨慎使用，见 [\#6](https://github.com/Xecades/zju-ical-py/issues/6)。
 
 在安装完依赖后，使用以下命令运行：
 
