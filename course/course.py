@@ -89,6 +89,10 @@ class Course:
             return False
         if self.weekType != other.weekType:
             return False
+        if self.location != other.location:
+            return False
+        if self.teacher != other.teacher:
+            return False
 
         if self.start > other.start:
             return other.overlap(self)
