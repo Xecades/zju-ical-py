@@ -52,6 +52,24 @@ def ugrsClassTermToQueryString(term: Term) -> None | str:
         return "2|短"
     return None
 
+def grsGetYear(year: str, term: Term) -> None | str:
+    years = year.split('-')
+    if term == Term.Autumn or term == Term.Winter:
+        return years[0]
+    elif term == Term.Spring or term == Term.Summer:
+        return years[1]
+    return None
+
+def grsClassTermToQueryString(term: Term) -> None | str:
+    if term == Term.Autumn:
+        return "13"
+    elif term == Term.Winter:
+        return "14"
+    elif term == Term.Spring:
+        return "11"
+    elif term == Term.Summer:
+        return "12"
+    return None
 
 def periodToTime(period: int) -> None | Time:
     if period == 1:
