@@ -3,7 +3,7 @@ import re
 import json
 import time
 from zjuam.base import Zjuam
-from course.course import CourseTable
+from course.ugrs_course import UGRSCourseTable
 from exam.exam import ExamTable
 from utils.const import Term
 from loguru import logger
@@ -63,7 +63,7 @@ class UgrsZjuam(Zjuam):
             raise e
         logger.success("ZJUAM 登录成功")
 
-    def getCourses(self, year: str, term: Term, exams: ExamTable) -> CourseTable:
+    def getCourses(self, year: str, term: Term, exams: ExamTable) -> UGRSCourseTable:
         logger.info(f"开始获取[{year}-{term.value}]课程信息")
         res = None
         try:
@@ -76,8 +76,8 @@ class UgrsZjuam(Zjuam):
             content = res.json()
 
             kblist = content["kbList"]
-            ct = CourseTable()
-            ct.fromZdbk(kblist)
+            ct = UGRSCourseTable()
+            ct.fromRes(kblist)
             ct.merge()
             ct.communicate(exams)
         except json.JSONDecodeError as e:
