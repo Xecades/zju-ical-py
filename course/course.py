@@ -202,7 +202,7 @@ class CourseTable:
                 elif tweak.TweakType == TweakMethod.Move:
                     shadowDates[tweak.To] = tweak.From
                     del shadowDates[tweak.From]
-                    modDescriptions[tweak.To] = tweak.Description
+                    modDescriptions[tweak.From] = tweak.Description
                 elif tweak.TweakType == TweakMethod.Exchange:
                     shadowDates[tweak.To] = tweak.From
                     shadowDates[tweak.From] = tweak.To
