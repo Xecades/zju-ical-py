@@ -1,6 +1,7 @@
 # Undergraduate Students
 import re
 import json
+import time
 from zjuam.base import Zjuam
 from course.course import CourseTable
 from exam.exam import ExamTable
@@ -11,7 +12,7 @@ from course.convert import ugrsClassTermToQueryString
 
 class UgrsZjuam(Zjuam):
     COURSE_URL = "https://zdbk.zju.edu.cn/jwglxt/kbcx/xskbcx_cxXsKb.html"
-    EXAM_URL = "https://zdbk.zju.edu.cn/jwglxt/xskscx/kscx_cxXsgrksIndex.html?doType=query&queryModel.showCount=%s"
+    EXAM_URL = "https://zdbk.zju.edu.cn/jwglxt/xskscx/kscx_cxXsgrksIndex.html?doType=query&gnmkdm=N509070&su=%s"  # gnmkdm=功能模块代码
     ZDBK_LOGIN_URL = "https://zjuam.zju.edu.cn/cas/login?service=https%3A%2F%2Fzdbk.zju.edu.cn%2Fjwglxt%2Fxtgl%2Flogin_ssologin.html"
 
     def __init__(self, username: str, password: str):
@@ -94,7 +95,15 @@ class UgrsZjuam(Zjuam):
         logger.info("开始获取考试信息")
         res = None
         try:
-            res = self.r.post(self.EXAM_URL % count)
+            res = self.r.post(self.EXAM_URL % self.username, data={
+                "_search": "false",
+                "nd": str(int(time.time() * 1000)),
+                "queryModel.showCount": str(count),
+                "queryModel.currentPage": "1",
+                "queryModel.sortName": "xkkh",
+                "queryModel.sortOrder": "asc",
+                "time": "0",
+            })
             content = res.json()
             items = content["items"]
             et = ExamTable()
