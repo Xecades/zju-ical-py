@@ -1,5 +1,7 @@
 import requests
-from course.course import Course
+from course.course import CourseTable
+from exam.exam import ExamTable
+from utils.const import Term
 from abc import ABC, abstractmethod
 
 
@@ -17,5 +19,5 @@ class Zjuam(ABC):
         pass
 
     @abstractmethod
-    def getCourses(self, year: str, term: str) -> list[Course]:
+    def getCourses(self, year: str, term: Term, exams: ExamTable) -> CourseTable:
         pass

@@ -1,5 +1,6 @@
 # Undergraduate Students
 import re
+import json
 from zjuam.base import Zjuam
 from course.course import CourseTable
 from exam.exam import ExamTable
@@ -63,19 +64,26 @@ class UgrsZjuam(Zjuam):
 
     def getCourses(self, year: str, term: Term, exams: ExamTable) -> CourseTable:
         logger.info(f"开始获取[{year}-{term.value}]课程信息")
+        res = None
         try:
             termQuery = ugrsClassTermToQueryString(term)
             assert termQuery, "学期参数错误"
             res = self.r.post(self.COURSE_URL, data={
                 "xnm": year,
                 "xqm": termQuery,
-            }).json()
+            })
+            content = res.json()
 
-            res = res["kbList"]
+            kblist = content["kbList"]
             ct = CourseTable()
-            ct.fromZdbk(res)
+            ct.fromZdbk(kblist)
             ct.merge()
             ct.communicate(exams)
+        except json.JSONDecodeError as e:
+            logger.error(f"课程信息获取失败: {e}")
+            if res is not None:
+                logger.info(f"返回内容: {res.text}")
+            raise e
         except Exception as e:
             logger.error(f"课程信息获取失败: {e}")
             raise e
@@ -84,11 +92,18 @@ class UgrsZjuam(Zjuam):
 
     def getExams(self, count: int = 5000) -> ExamTable:
         logger.info("开始获取考试信息")
+        res = None
         try:
-            res = self.r.post(self.EXAM_URL % count).json()
-            res = res["items"]
+            res = self.r.post(self.EXAM_URL % count)
+            content = res.json()
+            items = content["items"]
             et = ExamTable()
-            et.fromZdbk(res)
+            et.fromZdbk(items)
+        except json.JSONDecodeError as e:
+            logger.error(f"考试信息获取失败: {e}")
+            if res is not None:
+                logger.info(f"返回内容: {res.text}")
+            raise e
         except Exception as e:
             logger.error(f"考试信息获取失败: {e}")
             raise e
