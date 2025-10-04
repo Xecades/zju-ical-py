@@ -71,7 +71,7 @@ def periodic_task(zjuical_args: str):
 
 @app.route("/zjuical.ics")
 def serve_file():
-    with open("zjuical.ics", "r") as f:
+    with open("zjuical.ics", "r", encoding="utf-8") as f:
         content = f.read()
     return Response(content, mimetype="text/calendar")
 
