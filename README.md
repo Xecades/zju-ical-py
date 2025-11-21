@@ -1,14 +1,16 @@
 # ZJU-ICAL-PY
 
 > [!NOTE]
-> 本项目是基于 [ZJU-ICAL 项目](https://github.com/cxz66666/zju-ical)的 Python 重构版本，更换了调用 API，目前**只支持本科生课程表**生成。本文档部分参考原项目的 README。
+> 本项目是基于 [ZJU-ICAL 项目](https://github.com/cxz66666/zju-ical)的 Python 重构版本，更换了调用 API，目前**支持本科生和研究生的课程表**生成。本文档部分参考原项目的 README。
 >
 > 原项目按 LGPL-2.1 协议开源，本项目继承了原项目的协议。
+>
+> 研究生系统的 API 调用参考了 [Celechron 项目](https://github.com/Celechron/Celechron/blob/main/lib/http/zjuServices/grs_new.dart)。
 
-将 ZJU 本科生课程表转换为 iCal 日历格式，方便地导入到 Windows/macOS/Linux/Android/Harmony OS/iOS/iPadOS/watchOS/Wear OS 上，支持：
+将 ZJU 本科生/研究生课程表转换为 iCal 日历格式，方便地导入到 Windows/macOS/Linux/Android/Harmony OS/iOS/iPadOS/watchOS/Wear OS 上，支持：
 
  - 自动调休安排（由作者不定期维护）
- - 考试安排，包括考点教室、考试座位
+ - 考试安排，包括考点教室、考试座位（**目前仅支持本科生**）
 
 > [!WARNING]
 > 当前项目仍处于测试阶段，可能存在未知的问题，欢迎提交 Issue 或 Pull Request。
@@ -72,6 +74,7 @@ python webical.py "[传递给zjuical.py的参数]"
 ## 开发计划
 
  - [x] 提供网页版订阅，自动推送更新
- - [ ] 支持研究生课程表（作者是本科生，欢迎研究生同学合作）
+ - [x] 支持研究生课程表 by [\#11](https://github.com/Xecades/zju-ical-py/pull/11)
+   - [ ] 支持研究生考试安排
  - [ ] 提供更安全的传参方式
  - [ ] 整合 zju-connect

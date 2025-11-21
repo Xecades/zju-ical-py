@@ -4,6 +4,7 @@ from loguru import logger
 from datetime import date, datetime, timedelta
 from course.convert import isEvenWeek, periodToTime, dayOfWeekToWeekString
 from ical.ical import Event
+from abc import ABC, abstractmethod
 
 
 def daterange(start: date, end: date):
@@ -12,8 +13,7 @@ def daterange(start: date, end: date):
         yield start + timedelta(n)
 
 
-class Course:
-    SCHEME_ZDBK = "ZDBK"
+class Course(ABC):
 
     weekType: WeekType
     start: int
@@ -23,54 +23,12 @@ class Course:
     name: str
     location: str
     terms: list[Term]
-    timeString: str
     dayOfWeek: int
     credit: None | float
 
-    def __init__(self, raw: dict, scheme: str):
-        if scheme != Course.SCHEME_ZDBK:
-            raise NotImplementedError("不支持的课程查询方案")
-
-        self.credit = None
-        # 不确定为什么要截取前22位，但Celechron是这样做的
-        self.classId = raw["xkkh"][:22]  # 选课课号
-        self.dayOfWeek = int(raw["xqj"])  # 星期几
-
-        # 单双周
-        if raw["dsz"] == "0":
-            self.weekType = WeekType.OddOnly
-        elif raw["dsz"] == "1":
-            self.weekType = WeekType.EvenOnly
-        else:
-            self.weekType = WeekType.Normal
-
-        # 课程表
-        kcb = raw["kcb"]
-        kcb = kcb.split("zwf")[0].split("<br>")
-        self.name = kcb[0].replace("(", "（").replace(")", "）")
-        self.timeString = kcb[1]
-        self.teacher = kcb[2]
-        self.location = None if kcb[3] == "" else kcb[3]
-
-        # 学期
-        xxq: str = raw["xxq"]
-        self.terms = []
-        if "春" in xxq:
-            self.terms.append(Term.Spring)
-        if "夏" in xxq:
-            self.terms.append(Term.Summer)
-        if "秋" in xxq:
-            self.terms.append(Term.Autumn)
-        if "冬" in xxq:
-            self.terms.append(Term.Winter)
-        if any([x not in "春夏秋冬" for x in xxq]):
-            raise NotImplementedError(f"当前学期安排 {xxq} 不在支持范围内，欢迎提交 PR")
-
-        self.start = int(raw["djj"])  # 第几节
-        self.end = self.start + int(raw["skcd"])  # 上课长度
-
-        weekString = dayOfWeekToWeekString(self.dayOfWeek)
-        logger.info(f"{self.name}: {weekString} / {self.start}-{self.end - 1}")
+    @abstractmethod
+    def __init__(self, raw: dict):
+        pass
 
     def __repr__(self) -> str:
         res = "Course(\n"
@@ -115,19 +73,37 @@ class Course:
         dt = timedelta(minutes=45)
         return datetime(day.year, day.month, day.day, time.hour, time.minute) + dt
 
-    @property
-    def arrangementString(self) -> str:
-        res = self.timeString + " "
+    def setTerms(self, termsStr: str) -> None:
+        self.terms = []
+        if "春" in termsStr:
+            self.terms.append(Term.Spring)
+        if "夏" in termsStr:
+            self.terms.append(Term.Summer)
+        if "秋" in termsStr:
+            self.terms.append(Term.Autumn)
+        if "冬" in termsStr:
+            self.terms.append(Term.Winter)
+        if any([x not in "春夏秋冬" for x in termsStr]):
+            raise NotImplementedError(f"当前学期安排 {termsStr} 不在支持范围内，欢迎提交 PR")
 
-        if self.start == self.end - 1:
-            res += f"第{self.start}节"
-        else:
-            res += f"第{self.start}-{self.end - 1}节"
+    def printLog(self) -> None:
+        weekString = dayOfWeekToWeekString(self.dayOfWeek)
+        logger.info(f"{self.name}: {weekString} / {self.start}-{self.end - 1}")
+
+    @abstractmethod
+    def setWeekType(self, raw: str) -> None:
+        pass
+
+    @property
+    @abstractmethod
+    def description(self) -> str:
+        res = f"教师: {self.teacher}"
+        if self.credit is not None:
+            res += "\\n学分: %.1f" % self.credit
         return res
 
 
-class CourseTable:
-    courses: list[Course]
+class CourseTable(ABC):
 
     def __init__(self):
         self.courses: list[Course] = []
@@ -135,37 +111,9 @@ class CourseTable:
     def __repr__(self) -> str:
         return str(self.courses)
 
-    def fromZdbk(self, res: list[dict]) -> None:
-        for raw in res:
-            c = Course(raw, Course.SCHEME_ZDBK)
-            self.courses.append(c)
-
-    def communicate(self, exams: "ExamTable") -> None:
-        for course in self.courses:
-            examsOfCourse = exams.find(course)
-            if len(examsOfCourse) == 0:
-                continue
-            course.credit = examsOfCourse[0].credit
-
-    def merge(self) -> None:
-        logger.info("开始相连时段课程表合并")
-        try:
-            for i in range(len(self.courses)):
-                if self.courses[i] is None:
-                    continue
-                for j in range(i + 1, len(self.courses)):
-                    if self.courses[j] is None:
-                        continue
-
-                    if overlap := self.courses[i].overlap(self.courses[j]):
-                        start, end = overlap
-                        self.courses[i].start = start
-                        self.courses[i].end = end
-                        self.courses[j] = None
-            self.courses = list(filter(lambda c: c is not None, self.courses))
-        except Exception as e:
-            logger.error(f"课程表合并失败: {e}")
-            raise e
+    @abstractmethod
+    def fromRes(self, res) -> None:
+        pass
 
     def GetClassOfDay(self, day: int, term: int) -> list[Course]:
         res = []
@@ -234,10 +182,7 @@ class CourseTable:
                     if not isCurrentDateEvenWeek and course.weekType == WeekType.EvenOnly:
                         continue
 
-                    description = f"教师: {course.teacher}"
-                    if course.credit is not None:
-                        description += "\\n学分: %.1f" % course.credit
-                    description += f"\\n{course.arrangementString}"
+                    description = course.description
                     if dateOfClass in modDescriptions:
                         description = modDescriptions[dateOfClass] + \
                             "\\n\\n" + description
