@@ -9,8 +9,8 @@
 
 将 ZJU 本科生/研究生课程表转换为 iCal 日历格式，方便地导入到 Windows/macOS/Linux/Android/Harmony OS/iOS/iPadOS/watchOS/Wear OS 上，支持：
 
- - 自动调休安排（由作者不定期维护）
- - 考试安排，包括考点教室、考试座位（**目前仅支持本科生**）
+-   自动调休安排（由作者不定期维护）
+-   考试安排，包括考点教室、考试座位（**目前仅支持本科生**）
 
 > [!WARNING]
 > 当前项目仍处于测试阶段，可能存在未知的问题，欢迎提交 Issue 或 Pull Request。
@@ -73,8 +73,19 @@ python webical.py "[传递给zjuical.py的参数]"
 
 ## 开发计划
 
- - [x] 提供网页版订阅，自动推送更新
- - [x] 支持研究生课程表 by [\#11](https://github.com/Xecades/zju-ical-py/pull/11)
-   - [ ] 支持研究生考试安排
- - [ ] 提供更安全的传参方式
- - [ ] 整合 zju-connect
+-   [x] 提供网页版订阅，自动推送更新
+-   [x] 支持研究生课程表 by [\#11](https://github.com/Xecades/zju-ical-py/pull/11)
+    -   [ ] 支持研究生考试安排
+-   [ ] 提供更安全的传参方式
+-   [ ] 整合 zju-connect
+
+## 贡献代码
+
+欢迎提交 Issue 或 Pull Request！请在贡献代码前，安装 `ruff` 并使用
+
+```sh
+ruff format .
+ruff check --fix .
+```
+
+对代码进行格式化和检查，以保证代码风格一致。

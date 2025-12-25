@@ -1,5 +1,7 @@
 from loguru import logger
+
 from course.course import Course, CourseTable
+from exam.exam import ExamTable
 from utils.const import WeekType
 
 
@@ -20,7 +22,7 @@ class UGRSCourse(Course):
         self.name = kcb[0].replace("(", "（").replace(")", "）")
         self.timeString = kcb[1]
         self.teacher = kcb[2]
-        self.location = None if kcb[3] == "" else kcb[3]
+        self.location = "" if kcb[3] == "" else kcb[3]
 
         # 学期
         xxq: str = raw["xxq"]
@@ -52,15 +54,13 @@ class UGRSCourse(Course):
         return res
 
 
-class UGRSCourseTable(CourseTable):
-    courses: list[UGRSCourse]
-
+class UGRSCourseTable(CourseTable[UGRSCourse]):
     def fromRes(self, res: list[dict]) -> None:
         for raw in res:
             c = UGRSCourse(raw)
             self.courses.append(c)
 
-    def communicate(self, exams: "ExamTable") -> None:
+    def communicate(self, exams: ExamTable) -> None:
         for course in self.courses:
             examsOfCourse = exams.find(course)
             if len(examsOfCourse) == 0:
@@ -70,19 +70,21 @@ class UGRSCourseTable(CourseTable):
     def merge(self) -> None:
         logger.info("本科生：开始相连时段课程表合并")
         try:
+            to_remove = set()
             for i in range(len(self.courses)):
-                if self.courses[i] is None:
+                if i in to_remove:
                     continue
                 for j in range(i + 1, len(self.courses)):
-                    if self.courses[j] is None:
+                    if j in to_remove:
                         continue
 
                     if overlap := self.courses[i].overlap(self.courses[j]):
                         start, end = overlap
                         self.courses[i].start = start
                         self.courses[i].end = end
-                        self.courses[j] = None
-            self.courses = list(filter(lambda c: c is not None, self.courses))
+                        to_remove.add(j)
+
+            self.courses = [c for idx, c in enumerate(self.courses) if idx not in to_remove]
         except Exception as e:
             logger.error(f"本科生：课程表合并失败: {e}")
             raise e

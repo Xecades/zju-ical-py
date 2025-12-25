@@ -1,5 +1,6 @@
 from collections import namedtuple
 from datetime import date, datetime
+
 from utils.const import Term
 
 Time = namedtuple("Time", ["hour", "minute"])
@@ -17,89 +18,75 @@ def isEvenWeek(mondayOfTermBegin: date, date: date) -> bool:
     return (date - mondayOfTermBegin).days // 7 % 2 == 1
 
 
-def dayOfWeekToWeekString(day: int) -> None | str:
-    if day == 1:
-        return "星期一"
-    elif day == 2:
-        return "星期二"
-    elif day == 3:
-        return "星期三"
-    elif day == 4:
-        return "星期四"
-    elif day == 5:
-        return "星期五"
-    elif day == 6:
-        return "星期六"
-    elif day == 7:
-        return "星期日"
-    return None
+def dayOfWeekToWeekString(day: int) -> str:
+    mapping = {
+        1: "星期一",
+        2: "星期二",
+        3: "星期三",
+        4: "星期四",
+        5: "星期五",
+        6: "星期六",
+        7: "星期日",
+    }
+    if day not in mapping:
+        raise ValueError(f"未知的星期数: {day}")
+    return mapping[day]
 
 
-def ugrsClassTermToQueryString(term: Term) -> None | str:
-    if term == Term.Autumn:
-        return "1|秋"
-    elif term == Term.Winter:
-        return "1|冬"
-    elif term == Term.ShortA:
-        return "1|短"
-    elif term == Term.SummerVacation:
-        return "1|暑"
-    elif term == Term.Spring:
-        return "2|春"
-    elif term == Term.Summer:
-        return "2|夏"
-    elif term == Term.ShortB:
-        return "2|短"
-    return None
+def ugrsClassTermToQueryString(term: Term) -> str:
+    mapping = {
+        Term.Autumn: "1|秋",
+        Term.Winter: "1|冬",
+        Term.ShortA: "1|短",
+        Term.SummerVacation: "1|暑",
+        Term.Spring: "2|春",
+        Term.Summer: "2|夏",
+        Term.ShortB: "2|短",
+    }
+    if term not in mapping:
+        raise ValueError(f"未知的学期: {term.value}")
+    return mapping[term]
 
-def grsGetYear(year: str, term: Term) -> None | str:
-    years = year.split('-')
+
+def grsGetYear(year: str, term: Term) -> str:
+    years = year.split("-")
     if term == Term.Autumn or term == Term.Winter:
         return years[0]
     elif term == Term.Spring or term == Term.Summer:
         return years[1]
-    return None
+    raise ValueError(f"学年参数错误，无法从[{year}-{term.value}]中获取正确学年")
 
-def grsClassTermToQueryString(term: Term) -> None | str:
-    if term == Term.Autumn:
-        return "13"
-    elif term == Term.Winter:
-        return "14"
-    elif term == Term.Spring:
-        return "11"
-    elif term == Term.Summer:
-        return "12"
-    return None
 
-def periodToTime(period: int) -> None | Time:
-    if period == 1:
-        return Time(8, 0)
-    elif period == 2:
-        return Time(8, 50)
-    elif period == 3:
-        return Time(10, 0)
-    elif period == 4:
-        return Time(10, 50)
-    elif period == 5:
-        return Time(11, 40)
-    elif period == 6:
-        return Time(13, 25)
-    elif period == 7:
-        return Time(14, 15)
-    elif period == 8:
-        return Time(15, 5)
-    elif period == 9:
-        return Time(16, 15)
-    elif period == 10:
-        return Time(17, 5)
-    elif period == 11:
-        return Time(18, 50)
-    elif period == 12:
-        return Time(19, 40)
-    elif period == 13:
-        return Time(20, 30)
-    elif period == 14:
-        return Time(21, 20)
-    elif period == 15:
-        return Time(22, 10)
-    return None
+def grsClassTermToQueryString(term: Term) -> str:
+    mapping = {
+        Term.Autumn: "13",
+        Term.Winter: "14",
+        Term.Spring: "11",
+        Term.Summer: "12",
+    }
+    if term not in mapping:
+        raise ValueError(f"未知的学期: {term.value}")
+    return mapping[term]
+
+
+def periodToTime(period: int) -> Time:
+    mapping = {
+        1: Time(8, 0),
+        2: Time(8, 50),
+        3: Time(10, 0),
+        4: Time(10, 50),
+        5: Time(11, 40),
+        6: Time(13, 25),
+        7: Time(14, 15),
+        8: Time(15, 5),
+        9: Time(16, 15),
+        10: Time(17, 5),
+        11: Time(18, 50),
+        12: Time(19, 40),
+        13: Time(20, 30),
+        14: Time(21, 20),
+        15: Time(22, 10),
+    }
+    if period not in mapping:
+        raise ValueError(f"未知的节次: {period}")
+    return mapping[period]

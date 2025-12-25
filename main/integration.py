@@ -1,11 +1,15 @@
-from ical.ical import Calender
 from loguru import logger
-from utils.config import config, ClassYearAndTerm, TermConfig
-from zjuam.ugrs import UgrsZjuam
+
+from ical.ical import Calender
+from utils.config import ClassYearAndTerm, TermConfig, config
+from zjuam.base import Zjuam
 from zjuam.grs import GrsZjuam
+from zjuam.ugrs import UgrsZjuam
 
 
 def getCalender(username: str, password: str, skip_verification: bool) -> str:
+    zjuam: Zjuam | None = None
+
     match username[0]:
         case "3":
             logger.info("检测到本科生学号，使用本科生途径登录")
@@ -19,9 +23,11 @@ def getCalender(username: str, password: str, skip_verification: bool) -> str:
             else:
                 logger.error("学号不以 1/2/3 开头，不确保本项目能在除本科生/研究生之外的账号使用")
                 logger.info(
-                    "你可以通过 --skip-verification 参数跳过此检查，同时欢迎向作者反馈其他类型账号使用情况")
+                    "你可以通过 --skip-verification 参数跳过此检查，同时欢迎向作者反馈其他类型账号使用情况"
+                )
                 raise NotImplementedError("不支持的用户类型")
-        
+
+    assert zjuam is not None  # for type checker
     zjuam.login()
 
     termConfigs = config.termConfigs
@@ -43,11 +49,10 @@ def getCalender(username: str, password: str, skip_verification: bool) -> str:
 
         courses = zjuam.getCourses(item.Year, item.Term, exams)
         courseEvents = courses.toEvents(termConfig=tc)
+        cal.addEvents(courseEvents)
+
         if exams is not None:
             examEvents = exams.toEvents(courses)
-
-        cal.addEvents(courseEvents)
-        if exams is not None:
             cal.addEvents(examEvents)
 
     return cal.getICS(icalName=config.toTermString() + "课程表")

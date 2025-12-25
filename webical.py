@@ -1,12 +1,13 @@
-import time
-import sys
-import shlex
 import argparse
+import shlex
 import subprocess
+import sys
 import threading
-from waitress import serve
-from loguru import logger
+import time
+
 from flask import Flask, Response
+from loguru import logger
+from waitress import serve
 
 app = Flask(__name__)
 VERSION = "1.0.0"
@@ -22,18 +23,35 @@ def parse_args():
         description="Web server for ZJU-ICAL-PY that performs \
             code & data updates automatically every hour, and \
             serves the latest iCalendar file.",
-        formatter_class=formatter
+        formatter_class=formatter,
     )
     parse = parser.add_argument
 
-    parse("-p", "--port", type=int, default=5273,
-          help="port to run the web server on")
-    parse("--host", type=str, default="127.0.0.1",
-          help="host of the web server (just for display)")
-    parse("-v", "--version", action="version",
-          version=f"%(prog)s v{VERSION}", help="version for zjuical web server")
-    parse("zjuical", type=str,
-          help="arguments for zjuical.py, e.g. '-u [username] -p [password]'")
+    parse(
+        "-p",
+        "--port",
+        type=int,
+        default=5273,
+        help="port to run the web server on",
+    )
+    parse(
+        "--host",
+        type=str,
+        default="127.0.0.1",
+        help="host of the web server (just for display)",
+    )
+    parse(
+        "-v",
+        "--version",
+        action="version",
+        version=f"%(prog)s v{VERSION}",
+        help="version for zjuical web server",
+    )
+    parse(
+        "zjuical",
+        type=str,
+        help="arguments for zjuical.py, e.g. '-u [username] -p [password]'",
+    )
 
     return parser.parse_args()
 
@@ -71,7 +89,7 @@ def periodic_task(zjuical_args: str):
 
 @app.route("/zjuical.ics")
 def serve_file():
-    with open("zjuical.ics", "r", encoding="utf-8") as f:
+    with open("zjuical.ics", encoding="utf-8") as f:
         content = f.read()
     return Response(content, mimetype="text/calendar")
 
@@ -81,11 +99,7 @@ if __name__ == "__main__":
     logger.info(f"ZJU-ICAL-PY WEB-SERVER (v{VERSION}) by Xecades")
     logger.info(f"日历访问地址为 http://{args.host}:{args.port}/zjuical.ics")
 
-    t = threading.Thread(
-        target=periodic_task,
-        daemon=True,
-        args=(args.zjuical,)
-    )
+    t = threading.Thread(target=periodic_task, daemon=True, args=(args.zjuical,))
     t.start()
 
     serve(app, host="0.0.0.0", port=args.port)

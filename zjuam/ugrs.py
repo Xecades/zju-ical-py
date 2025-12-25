@@ -1,13 +1,15 @@
 # Undergraduate Students
-import re
 import json
+import re
 import time
-from zjuam.base import Zjuam
+
+from loguru import logger
+
+from course.convert import ugrsClassTermToQueryString
 from course.ugrs_course import UGRSCourseTable
 from exam.exam import ExamTable
 from utils.const import Term
-from loguru import logger
-from course.convert import ugrsClassTermToQueryString
+from zjuam.base import Zjuam
 
 
 class UgrsZjuam(Zjuam):
@@ -26,7 +28,9 @@ class UgrsZjuam(Zjuam):
             res = self.r.get(self.ZDBK_LOGIN_URL)
             assert res.status_code == 200, "状态码错误"
             regex = r"\"execution\" value=\"(.*?)\" \/>"
-            csrf = re.search(regex, res.text).group(1)
+            match = re.search(regex, res.text)
+            assert match is not None, f"CSRF Key 正则匹配失败，返回内容: {res.text}"
+            csrf = match.group(1)
             assert csrf, "CSRF Key 为空"
         except Exception as e:
             logger.error(f"CSRF Key 获取失败: {e}")
@@ -49,14 +53,19 @@ class UgrsZjuam(Zjuam):
 
         # stage 3: fire target
         try:
-            res = self.r.post(self.LOGIN_URL, data={
-                "username": self.username,
-                "password": cipher,
-                "authcode":  "",
-                "execution": csrf,
-                "_eventId":  "submit",
-            })
-            assert "用户名或密码错误" not in res.text, "用户名或密码错误，请确保用户名密码正确后再运行程序，否则有账号被锁定的风险"
+            res = self.r.post(
+                self.LOGIN_URL,
+                data={
+                    "username": self.username,
+                    "password": cipher,
+                    "authcode": "",
+                    "execution": csrf,
+                    "_eventId": "submit",
+                },
+            )
+            assert "用户名或密码错误" not in res.text, (
+                "用户名或密码错误，请确保用户名密码正确后再运行程序，否则有账号被锁定的风险"
+            )
             assert "账号被锁定" not in res.text, "输错密码次数太多，账号被锁定，请过段时间再使用"
         except Exception as e:
             logger.error(f"ZJUAM 登录失败: {e}")
@@ -68,12 +77,11 @@ class UgrsZjuam(Zjuam):
         res = None
         try:
             termQuery = ugrsClassTermToQueryString(term)
-            assert termQuery, "学期参数错误"
             time.sleep(1.5)
-            res = self.r.post(self.COURSE_URL, data={
-                "xnm": year,
-                "xqm": termQuery,
-            })
+            res = self.r.post(
+                self.COURSE_URL,
+                data={"xnm": year, "xqm": termQuery},
+            )
             content = res.json()
 
             kblist = content["kbList"]
@@ -96,15 +104,18 @@ class UgrsZjuam(Zjuam):
         logger.info("开始获取考试信息")
         res = None
         try:
-            res = self.r.post(self.EXAM_URL % self.username, data={
-                "_search": "false",
-                "nd": str(int(time.time() * 1000)),
-                "queryModel.showCount": str(count),
-                "queryModel.currentPage": "1",
-                "queryModel.sortName": "xkkh",
-                "queryModel.sortOrder": "asc",
-                "time": "0",
-            })
+            res = self.r.post(
+                self.EXAM_URL % self.username,
+                data={
+                    "_search": "false",
+                    "nd": str(int(time.time() * 1000)),
+                    "queryModel.showCount": str(count),
+                    "queryModel.currentPage": "1",
+                    "queryModel.sortName": "xkkh",
+                    "queryModel.sortOrder": "asc",
+                    "time": "0",
+                },
+            )
             content = res.json()
             items = content["items"]
             et = ExamTable()
