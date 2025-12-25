@@ -69,6 +69,7 @@ class UgrsZjuam(Zjuam):
         try:
             termQuery = ugrsClassTermToQueryString(term)
             assert termQuery, "学期参数错误"
+            time.sleep(1.5)
             res = self.r.post(self.COURSE_URL, data={
                 "xnm": year,
                 "xqm": termQuery,

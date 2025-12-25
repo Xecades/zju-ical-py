@@ -7,7 +7,7 @@ from utils.const import Term
 from loguru import logger
 from course.convert import grsGetYear, grsClassTermToQueryString
 from urllib.parse import urlparse, parse_qs
-import json
+import time
 
 
 class GrsZjuam(Zjuam):
@@ -114,6 +114,7 @@ class GrsZjuam(Zjuam):
             termQuery = grsClassTermToQueryString(term)
             assert year, "学年参数错误"
             assert termQuery, "学期参数错误"
+            time.sleep(1.5)
 
             courseUrl = self.COURSE_URL + f"xn={year}&pkxq={termQuery}"
             res = self.r.get(courseUrl, headers={
