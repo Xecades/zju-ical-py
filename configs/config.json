@@ -8,10 +8,16 @@
             "To": 20251008
         },
         {
-            "TweakType": "Clear",
-            "Description": "[元旦] 1月1日（周四）停课",
+            "TweakType": "Move",
+            "Description": "[元旦] 1月1日（周四）停课，安排在1月6日（周二）补课",
             "From": 20260101,
-            "To": 20260101
+            "To": 20260106
+        },
+        {
+            "TweakType": "Exchange",
+            "Description": "[元旦] 1月2日（周五）与1月4日（周日）的课对调",
+            "From": 20260102,
+            "To": 20260104
         },
         {
             "TweakType": "Exchange",
@@ -36,12 +42,6 @@
             "Description": "[学生节] 12月31日（周三）停课，安排在1月5日（周一）补课",
             "From": 20251231,
             "To": 20260105
-        },
-        {
-            "TweakType": "Pending",
-            "Description": "[元旦] 调休安排另行通知",
-            "From": 20260101,
-            "To": 20260101
         }
     ],
     "termConfigs": [

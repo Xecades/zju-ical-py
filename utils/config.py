@@ -1,11 +1,13 @@
-import os
 import json
-from datetime import datetime
-from dataclasses import dataclass
-from utils.const import Term, TweakMethod
-from course.convert import isoToDate
-from loguru import logger
+import os
 from collections import defaultdict
+from dataclasses import dataclass
+from datetime import datetime
+
+from loguru import logger
+
+from course.convert import isoToDate
+from utils.const import Term, TweakMethod
 
 
 @dataclass
@@ -42,7 +44,7 @@ class Config:
         pass
 
     def toTermString(self) -> str:
-        terms = defaultdict(str)
+        terms: defaultdict[str, str] = defaultdict(str)
         for ct in self.classTerms:
             terms[ct.Year] += f"{ct.Term.value}"
         return ", ".join(f"{year} {terms[year]}" for year in sorted(terms.keys()))
@@ -54,7 +56,7 @@ class Config:
             logger.error(f"配置文件 {path} 不存在")
             exit(1)
 
-        self.config = json.load(open(path, "r", encoding="utf-8"))
+        self.config = json.load(open(path, encoding="utf-8"))
         self.lastUpdated = isoToDate(self.config["lastUpdated"])
         self.classTerms = []
         self.termConfigs = []

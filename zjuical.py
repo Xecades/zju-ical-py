@@ -1,12 +1,15 @@
-import os
 import argparse
-from loguru import logger
-from utils.config import config
-from main.integration import getCalender
+import os
 
-VERSION = "1.0.3"
+from loguru import logger
+
+from main.integration import getCalender
+from utils.config import config
+
+VERSION = "1.0.4"
 
 if __name__ == "__main__":
+
     def formatter(prog):
         return argparse.HelpFormatter(prog, max_help_position=52)
 
@@ -16,22 +19,56 @@ if __name__ == "__main__":
             class schedule iCalender file from extracting \
             data from ZJU ZDBK API. Refactored based \
             on Python by Xecades.",
-        formatter_class=formatter
+        formatter_class=formatter,
     )
     parse = parser.add_argument
 
-    parse("-u", "--username", type=str, required=True, help="ZJUAM username")
-    parse("-p", "--password", type=str, required=True, help="ZJUAM password")
-    parse("-c", "--config", type=str, default="configs/config.json",
-          help="config file (default \"configs/config.json\")")
-    parse("-o", "--output", type=str, default="zjuical.ics",
-          help="output file (default \"zjuical.ics\")")
-    parse("-f", "--force", action="store_true",
-          help="force write to target file")
-    parse("--skip-verification", action="store_true",
-          help="skip verification for non-undergraduate account")
-    parse("-v", "--version", action="version",
-          version=f"%(prog)s v{VERSION}", help="version for zjuical")
+    parse(
+        "-u",
+        "--username",
+        type=str,
+        required=True,
+        help="ZJUAM username",
+    )
+    parse(
+        "-p",
+        "--password",
+        type=str,
+        required=True,
+        help="ZJUAM password",
+    )
+    parse(
+        "-c",
+        "--config",
+        type=str,
+        default="configs/config.json",
+        help='config file (default "configs/config.json")',
+    )
+    parse(
+        "-o",
+        "--output",
+        type=str,
+        default="zjuical.ics",
+        help='output file (default "zjuical.ics")',
+    )
+    parse(
+        "-f",
+        "--force",
+        action="store_true",
+        help="force write to target file",
+    )
+    parse(
+        "--skip-verification",
+        action="store_true",
+        help="skip verification for non-undergraduate account",
+    )
+    parse(
+        "-v",
+        "--version",
+        action="version",
+        version=f"%(prog)s v{VERSION}",
+        help="version for zjuical",
+    )
 
     args = parser.parse_args()
 
@@ -50,4 +87,4 @@ if __name__ == "__main__":
         logger.info(f"正在写入文件 {args.output}")
         f.write(cal)
 
-    logger.success(f"日历文件生成完毕")
+    logger.success("日历文件生成完毕")

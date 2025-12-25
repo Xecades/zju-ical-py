@@ -1,8 +1,10 @@
-from datetime import datetime, UTC
 from dataclasses import dataclass
-from course.convert import toISOString
+from datetime import UTC, datetime
 from hashlib import sha1
+
 from loguru import logger
+
+from course.convert import toISOString
 
 
 @dataclass

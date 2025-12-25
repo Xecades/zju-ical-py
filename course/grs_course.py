@@ -1,4 +1,5 @@
 from loguru import logger
+
 from course.convert import dayOfWeekToWeekString
 from course.course import Course, CourseTable
 from utils.const import WeekType
@@ -60,9 +61,7 @@ class GRSCourse(Course):
         return res
 
 
-class GRSCourseTable(CourseTable):
-    courses: list[GRSCourse]
-
+class GRSCourseTable(CourseTable[GRSCourse]):
     def fromRes(self, res: dict) -> None:
         for day in range(1, 7):
             if str(day) not in res:
@@ -83,17 +82,17 @@ class GRSCourseTable(CourseTable):
             for r in res:
                 if r.get("kcbh") == course.classId:
                     course.credit = float(r.get("xf", 0))
-                    course.courseType = r.get("kcxzDm") if r.get(
-                        "kcxzDm") else ""  # 课程性质代码
-                    course.courseType += ("(" + r.get("bx") +
-                                          ")") if r.get("bx") else ""  # 必选修
-                    course.comment = r.get("bz") if r.get("bz") else ""  # 备注
-                    course.school = r.get("kkxyMc") if r.get(
-                        "kkxyMc") else ""  # 开课学院名称
-                    if course.location == "" and any(x in course.comment for x in ["线上", "录播", "直播"]):
+                    course.courseType = str(r.get("kcxzDm") or "")  # 课程性质代码
+                    course.courseType += (
+                        ("(" + str(r.get("bx")) + ")") if r.get("bx") else ""
+                    )  # 必选修
+                    course.comment = str(r.get("bz") or "")  # 备注
+                    course.school = str(r.get("kkxyMc") or "")  # 开课学院名称
+                    if course.location == "" and any(
+                        x in course.comment for x in ["线上", "录播", "直播"]
+                    ):
                         course.location = "线上"
-                    courseInfo = r.get("sjddBz") if r.get(
-                        "sjddBz") else ""  # 时间地点备注
+                    courseInfo = str(r.get("sjddBz") or "")  # 时间地点备注
                     course.termInfo = courseInfo.split("<br/>")[0]
 
                     break
@@ -103,8 +102,14 @@ class GRSCourseTable(CourseTable):
         try:
             uniqueCourses = {}
             for course in self.courses:
-                key = (course.classId, course.dayOfWeek, course.start,
-                       course.end, course.location, course.teacher)
+                key = (
+                    course.classId,
+                    course.dayOfWeek,
+                    course.start,
+                    course.end,
+                    course.location,
+                    course.teacher,
+                )
                 if key not in uniqueCourses:
                     uniqueCourses[key] = course
             self.courses = list(uniqueCourses.values())

@@ -1,10 +1,13 @@
-from utils.const import Term, WeekType, TweakMethod
-from utils.config import config, TermConfig
-from loguru import logger
-from datetime import date, datetime, timedelta
-from course.convert import isEvenWeek, periodToTime, dayOfWeekToWeekString
-from ical.ical import Event
 from abc import ABC, abstractmethod
+from datetime import date, datetime, timedelta
+from typing import Generic, TypeVar
+
+from loguru import logger
+
+from course.convert import dayOfWeekToWeekString, isEvenWeek, periodToTime
+from ical.ical import Event
+from utils.config import TermConfig, config
+from utils.const import Term, TweakMethod, WeekType
 
 
 def daterange(start: date, end: date):
@@ -14,7 +17,6 @@ def daterange(start: date, end: date):
 
 
 class Course(ABC):
-
     weekType: WeekType
     start: int
     end: int
@@ -40,23 +42,26 @@ class Course(ABC):
         res += ")"
         return res
 
-    def overlap(self, other: "Course") -> bool | tuple[int, int]:
+    def overlap(self, other: "Course") -> None | tuple[int, int]:
+        """
+        检查两个课程是否重叠，若重叠则返回重叠的起止节次
+        """
         if self.classId != other.classId:
-            return False
+            return None
         if self.dayOfWeek != other.dayOfWeek:
-            return False
+            return None
         if self.weekType != other.weekType:
-            return False
+            return None
         if self.location != other.location:
-            return False
+            return None
         if self.teacher != other.teacher:
-            return False
+            return None
 
         if self.start > other.start:
             return other.overlap(self)
 
         if self.end < other.start:
-            return False
+            return None
 
         assert self.end == other.start, "相同课程不应该发生重叠，请联系开发者"
         return self.start, other.end
@@ -99,14 +104,16 @@ class Course(ABC):
     def description(self) -> str:
         res = f"教师: {self.teacher}"
         if self.credit is not None:
-            res += "\\n学分: %.1f" % self.credit
+            res += f"\\n学分: {self.credit:.1f}"
         return res
 
 
-class CourseTable(ABC):
+T = TypeVar("T", bound="Course")
 
+
+class CourseTable(ABC, Generic[T]):
     def __init__(self):
-        self.courses: list[Course] = []
+        self.courses: list[T] = []
 
     def __repr__(self) -> str:
         return str(self.courses)
@@ -115,7 +122,7 @@ class CourseTable(ABC):
     def fromRes(self, res) -> None:
         pass
 
-    def GetClassOfDay(self, day: int, term: int) -> list[Course]:
+    def GetClassOfDay(self, day: int, term: Term) -> list[T]:
         res = []
         for course in self.courses:
             if course.dayOfWeek == day and course.isInTerm(term):
@@ -166,16 +173,17 @@ class CourseTable(ABC):
                 classOfDay[i] = self.GetClassOfDay(i, termConfig.Term)
 
             termBeginDayOfWeek = termBegin.weekday() + 1
-            mondayOfFirstWeek = termBegin - \
-                timedelta(days=termBeginDayOfWeek - 1) - \
-                timedelta(weeks=termConfig.FirstWeekNo - 1)
+            mondayOfFirstWeek = (
+                termBegin
+                - timedelta(days=termBeginDayOfWeek - 1)
+                - timedelta(weeks=termConfig.FirstWeekNo - 1)
+            )
 
             events: list[Event] = []
 
             for actualDate, dateOfClass in shadowDates.items():
                 classesOfCurrentDate = classOfDay[dateOfClass.weekday() + 1]
-                isCurrentDateEvenWeek = isEvenWeek(
-                    mondayOfFirstWeek, dateOfClass)
+                isCurrentDateEvenWeek = isEvenWeek(mondayOfFirstWeek, dateOfClass)
                 for course in classesOfCurrentDate:
                     if isCurrentDateEvenWeek and course.weekType == WeekType.OddOnly:
                         continue
@@ -184,16 +192,17 @@ class CourseTable(ABC):
 
                     description = course.description
                     if dateOfClass in modDescriptions:
-                        description = modDescriptions[dateOfClass] + \
-                            "\\n\\n" + description
+                        description = modDescriptions[dateOfClass] + "\\n\\n" + description
 
-                    events.append(Event(
-                        summary=course.name,
-                        location=course.location,
-                        description=description,
-                        start=course.getStartDateTime(actualDate),
-                        end=course.getEndDateTime(actualDate)
-                    ))
+                    events.append(
+                        Event(
+                            summary=course.name,
+                            location=course.location,
+                            description=description,
+                            start=course.getStartDateTime(actualDate),
+                            end=course.getEndDateTime(actualDate),
+                        )
+                    )
         except Exception as e:
             logger.error(f"课程表日历事件生成失败: {e}")
             raise e
