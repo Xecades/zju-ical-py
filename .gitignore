@@ -3,3 +3,5 @@ __pycache__
 *.ics
 *.local*
 .DS_Store
+.env
+configs/tweaks.to_be_validated.json
