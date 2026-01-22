@@ -69,6 +69,12 @@ if __name__ == "__main__":
         help="skip verification for non-undergraduate account",
     )
     parse(
+        "--delay",
+        type=float,
+        default=1.5,
+        help="delay between requests in seconds (default 1.5)",
+    )
+    parse(
         "-v",
         "--version",
         action="version",
@@ -93,7 +99,7 @@ if __name__ == "__main__":
     else:
         config.load(args.config)
     
-    cal = getCalender(args.username, args.password, args.skip_verification)
+    cal = getCalender(args.username, args.password, args.skip_verification, args.delay)
     with open(args.output, "w", encoding="utf-8") as f:
         logger.info(f"正在写入文件 {args.output}")
         f.write(cal)

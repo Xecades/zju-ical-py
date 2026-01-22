@@ -11,9 +11,10 @@ class Zjuam(ABC):
     LOGIN_URL = "https://zjuam.zju.edu.cn/cas/login"
     PUBKEY_URL = "https://zjuam.zju.edu.cn/cas/v2/getPubKey"
 
-    def __init__(self, username: str, password: str):
+    def __init__(self, username: str, password: str, request_delay: float = 1.5):
         self.username = username
         self.password = password
+        self.request_delay = request_delay
         self.r = requests.Session()
 
     @abstractmethod

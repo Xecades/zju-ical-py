@@ -17,8 +17,8 @@ class UgrsZjuam(Zjuam):
     EXAM_URL = "https://zdbk.zju.edu.cn/jwglxt/xskscx/kscx_cxXsgrksIndex.html?doType=query&gnmkdm=N509070&su=%s"  # gnmkdm=功能模块代码
     ZDBK_LOGIN_URL = "https://zjuam.zju.edu.cn/cas/login?service=https%3A%2F%2Fzdbk.zju.edu.cn%2Fjwglxt%2Fxtgl%2Flogin_ssologin.html"
 
-    def __init__(self, username: str, password: str):
-        super().__init__(username, password)
+    def __init__(self, username: str, password: str, request_delay: float = 1.5):
+        super().__init__(username, password, request_delay)
 
     def login(self) -> None:
         logger.info("开始通过 ZJUAM 本科生途径登录")
@@ -77,7 +77,7 @@ class UgrsZjuam(Zjuam):
         res = None
         try:
             termQuery = ugrsClassTermToQueryString(term)
-            time.sleep(1.5)
+            time.sleep(self.request_delay)
             res = self.r.post(
                 self.COURSE_URL,
                 data={"xnm": year, "xqm": termQuery},

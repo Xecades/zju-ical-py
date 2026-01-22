@@ -19,8 +19,8 @@ class GrsZjuam(Zjuam):
     YJSY_LOGIN_URL = "https://zjuam.zju.edu.cn/cas/login?service=https%3A%2F%2Fyjsy.zju.edu.cn%2F"
     YJSY_TOKEN_URL = "https://yjsy.zju.edu.cn/dataapi/sys/cas/client/validateLogin?service=https:%2F%2Fyjsy.zju.edu.cn%2F"
 
-    def __init__(self, username: str, password: str):
-        super().__init__(username, password)
+    def __init__(self, username: str, password: str, request_delay: float = 1.5):
+        super().__init__(username, password, request_delay)
 
     def login(self) -> None:
         logger.info("开始通过 ZJUAM 研究生途径登录")
@@ -120,7 +120,7 @@ class GrsZjuam(Zjuam):
         try:
             year = grsGetYear(year, term)
             termQuery = grsClassTermToQueryString(term)
-            time.sleep(1.5)
+            time.sleep(self.request_delay)
 
             courseUrl = self.COURSE_URL + f"xn={year}&pkxq={termQuery}"
             res = self.r.get(courseUrl, headers={"X-Access-Token": self._token}).json()

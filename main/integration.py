@@ -7,16 +7,16 @@ from zjuam.grs import GrsZjuam
 from zjuam.ugrs import UgrsZjuam
 
 
-def getCalender(username: str, password: str, skip_verification: bool) -> str:
+def getCalender(username: str, password: str, skip_verification: bool, request_delay: float = 1.5) -> str:
     zjuam: Zjuam | None = None
 
     match username[0]:
         case "3":
             logger.info("检测到本科生学号，使用本科生途径登录")
-            zjuam = UgrsZjuam(username, password)
+            zjuam = UgrsZjuam(username, password, request_delay)
         case "1" | "2":
             logger.info("检测到研究生学号，使用研究生途径登录")
-            zjuam = GrsZjuam(username, password)
+            zjuam = GrsZjuam(username, password, request_delay)
         case _:
             if skip_verification:
                 logger.warning("跳过学号验证")
