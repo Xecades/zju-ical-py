@@ -45,6 +45,12 @@ if __name__ == "__main__":
         help='config file (default "configs/config.json")',
     )
     parse(
+        "-a",
+        "--all",
+        action="store_true",
+        help="generate calendar for all config.*.json files in configs folder (overrides --config)",
+    )
+    parse(
         "-o",
         "--output",
         type=str,
@@ -81,7 +87,12 @@ if __name__ == "__main__":
         else:
             logger.warning(f"输出文件 {args.output} 已存在，将被覆盖")
 
-    config.load(args.config)
+    if args.all:
+        logger.info("使用 --all 模式，将生成所有配置文件的日历")
+        config.loadAll()
+    else:
+        config.load(args.config)
+    
     cal = getCalender(args.username, args.password, args.skip_verification)
     with open(args.output, "w", encoding="utf-8") as f:
         logger.info(f"正在写入文件 {args.output}")
