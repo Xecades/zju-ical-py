@@ -7,7 +7,12 @@ from zjuam.grs import GrsZjuam
 from zjuam.ugrs import UgrsZjuam
 
 
-def getCalender(username: str, password: str, skip_verification: bool, request_delay: float = 1.5) -> str:
+def getCalender(
+    username: str,
+    password: str,
+    skip_verification_and_use: str | None,
+    request_delay: float = 1.5,
+) -> str:
     zjuam: Zjuam | None = None
 
     match username[0]:
@@ -18,16 +23,20 @@ def getCalender(username: str, password: str, skip_verification: bool, request_d
             logger.info("检测到研究生学号，使用研究生途径登录")
             zjuam = GrsZjuam(username, password, request_delay)
         case _:
-            if skip_verification:
-                logger.warning("跳过学号验证")
+            if skip_verification_and_use == "ugrs":
+                logger.warning("跳过学号验证，使用本科生途径登录")
+                zjuam = UgrsZjuam(username, password, request_delay)
+            elif skip_verification_and_use == "grs":
+                logger.warning("跳过学号验证，使用研究生途径登录")
+                zjuam = GrsZjuam(username, password, request_delay)
             else:
                 logger.error("学号不以 1/2/3 开头，不确保本项目能在除本科生/研究生之外的账号使用")
                 logger.info(
-                    "你可以通过 --skip-verification 参数跳过此检查，同时欢迎向作者反馈其他类型账号使用情况"
+                    "你可以通过 --skip-verification-and-use 参数跳过此检查，"
+                    "同时欢迎向作者反馈其他类型账号使用情况"
                 )
                 raise NotImplementedError("不支持的用户类型")
 
-    assert zjuam is not None  # for type checker
     zjuam.login()
 
     termConfigs = config.termConfigs

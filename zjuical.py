@@ -64,9 +64,10 @@ if __name__ == "__main__":
         help="force write to target file",
     )
     parse(
-        "--skip-verification",
-        action="store_true",
-        help="skip verification for non-undergraduate account",
+        "--skip-verification-and-use",
+        type=str,
+        choices=["grs", "ugrs"],
+        help="skip verification for student id format, and use specified login method",
     )
     parse(
         "--delay",
@@ -98,8 +99,8 @@ if __name__ == "__main__":
         config.loadAll()
     else:
         config.load(args.config)
-    
-    cal = getCalender(args.username, args.password, args.skip_verification, args.delay)
+
+    cal = getCalender(args.username, args.password, args.skip_verification_and_use, args.delay)
     with open(args.output, "w", encoding="utf-8") as f:
         logger.info(f"正在写入文件 {args.output}")
         f.write(cal)
