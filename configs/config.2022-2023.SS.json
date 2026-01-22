@@ -1,0 +1,46 @@
+{
+    "lastUpdated": 20260122,
+    "tweaks": [
+        {
+            "TweakType": "Clear",
+            "Description": "[清明节] 4月5日（周三）放假停课",
+            "From": 20230405,
+            "To": 20230405
+        },
+        {
+            "TweakType": "Clear",
+            "Description": "[劳动节] 5月1日（周一）放假停课",
+            "From": 20230501,
+            "To": 20230501
+        },
+        {
+            "TweakType": "Move",
+            "Description": "[劳动节] 5月2日（周二）停课，安排在6月19日（周一）补课",
+            "From": 20230502,
+            "To": 20230619
+        },
+        {
+            "TweakType": "Exchange",
+            "Description": "[劳动节] 5月3日（周三）与5月14日（周日）的课对调",
+            "From": 20230503,
+            "To": 20230514
+        }
+    ],
+    "termConfigs": [
+        {
+            "Year": "2022-2023",
+            "Term": "春",
+            "Begin": 20230227,
+            "End": 20230421,
+            "FirstWeekNo": 1
+        },
+        {
+            "Year": "2022-2023",
+            "Term": "夏",
+            "Begin": 20230424,
+            "End": 20230619,
+            "FirstWeekNo": 1
+        }
+    ],
+    "classTerms": ["2022-2023:春", "2022-2023:夏"]
+}

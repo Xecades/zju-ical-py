@@ -1,0 +1,58 @@
+{
+    "lastUpdated": 20260122,
+    "tweaks": [
+        {
+            "TweakType": "Clear",
+            "Description": "[中秋节] 9月9日至11日放假停课",
+            "From": 20220909,
+            "To": 20220911
+        },
+        {
+            "TweakType": "Clear",
+            "Description": "[国庆节] 10月1日（周六）至3日（周一）放假停课",
+            "From": 20221001,
+            "To": 20221003
+        },
+        {
+            "TweakType": "Clear",
+            "Description": "[国庆节] 10月4日（周二）至5日（周三）放假停课",
+            "From": 20221004,
+            "To": 20221005
+        },
+        {
+            "TweakType": "Exchange",
+            "Description": "[国庆节] 10月6日（周四）与10月8日（周六）的课对调",
+            "From": 20221006,
+            "To": 20221008
+        },
+        {
+            "TweakType": "Exchange",
+            "Description": "[国庆节] 10月7日（周五）与10月9日（周日）的课对调",
+            "From": 20221007,
+            "To": 20221009
+        },
+        {
+            "TweakType": "Move",
+            "Description": "[秋季校运会] 10月21日（周五）停课，安排在10月15日（周六）补课",
+            "From": 20221021,
+            "To": 20221015
+        }
+    ],
+    "termConfigs": [
+        {
+            "Year": "2022-2023",
+            "Term": "秋",
+            "Begin": 20220912,
+            "End": 20221106,
+            "FirstWeekNo": 1
+        },
+        {
+            "Year": "2022-2023",
+            "Term": "冬",
+            "Begin": 20221107,
+            "End": 20230111,
+            "FirstWeekNo": 1
+        }
+    ],
+    "classTerms": ["2022-2023:秋", "2022-2023:冬"]
+}

@@ -1,0 +1,58 @@
+{
+    "lastUpdated": 20260122,
+    "tweaks": [
+        {
+            "TweakType": "Clear",
+            "Description": "[清明节] 4月4日（周四）国家法定节假日停课",
+            "From": 20240404,
+            "To": 20240404
+        },
+        {
+            "TweakType": "Exchange",
+            "Description": "[清明节] 4月5日（周五）与4月7日（周日）的课对调",
+            "From": 20240405,
+            "To": 20240407
+        },
+        {
+            "TweakType": "Clear",
+            "Description": "[劳动节] 5月1日（周三）国家法定节假日停课",
+            "From": 20240501,
+            "To": 20240501
+        },
+        {
+            "TweakType": "Exchange",
+            "Description": "[劳动节] 5月2日（周四）与5月11日（周六）的课对调",
+            "From": 20240502,
+            "To": 20240511
+        },
+        {
+            "TweakType": "Move",
+            "Description": "[劳动节] 5月3日（周五）停课，安排在6月17日（周一）补课",
+            "From": 20240503,
+            "To": 20240617
+        },
+        {
+            "TweakType": "Clear",
+            "Description": "[端午节] 6月10日（周一）国家法定节假日停课",
+            "From": 20240610,
+            "To": 20240610
+        }
+    ],
+    "termConfigs": [
+        {
+            "Year": "2023-2024",
+            "Term": "春",
+            "Begin": 20240226,
+            "End": 20240421,
+            "FirstWeekNo": 1
+        },
+        {
+            "Year": "2023-2024",
+            "Term": "夏",
+            "Begin": 20240422,
+            "End": 20240617,
+            "FirstWeekNo": 1
+        }
+    ],
+    "classTerms": ["2023-2024:春", "2023-2024:夏"]
+}
