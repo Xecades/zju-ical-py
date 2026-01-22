@@ -6,7 +6,7 @@ from loguru import logger
 from main.integration import getCalender
 from utils.config import config
 
-VERSION = "1.0.4"
+VERSION = "1.1.0"
 
 if __name__ == "__main__":
 
