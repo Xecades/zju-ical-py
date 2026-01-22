@@ -112,7 +112,7 @@ T = TypeVar("T", bound="Course")
 
 
 class CourseTable(ABC, Generic[T]):
-    def __init__(self):
+    def __init__(self) -> None:
         self.courses: list[T] = []
 
     def __repr__(self) -> str:
