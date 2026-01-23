@@ -76,6 +76,11 @@ if __name__ == "__main__":
         help="delay between requests in seconds (default 1.5)",
     )
     parse(
+        "--include-todos",
+        action="store_true",
+        help="include todos (homework deadlines) in the calendar",
+    )
+    parse(
         "-v",
         "--version",
         action="version",
@@ -100,7 +105,13 @@ if __name__ == "__main__":
     else:
         config.load(args.config)
 
-    cal = getCalender(args.username, args.password, args.skip_verification_and_use, args.delay)
+    cal = getCalender(
+        args.username,
+        args.password,
+        args.skip_verification_and_use,
+        args.delay,
+        args.include_todos,
+    )
     with open(args.output, "w", encoding="utf-8") as f:
         logger.info(f"正在写入文件 {args.output}")
         f.write(cal)

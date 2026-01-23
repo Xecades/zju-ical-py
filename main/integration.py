@@ -12,6 +12,7 @@ def getCalender(
     password: str,
     skip_verification_and_use: str | None,
     request_delay: float = 1.5,
+    include_todos: bool = False,
 ) -> str:
     zjuam: Zjuam | None = None
 
@@ -63,5 +64,10 @@ def getCalender(
         if exams is not None:
             examEvents = exams.toEvents(courses)
             cal.addEvents(examEvents)
+
+    if include_todos:
+        todos = zjuam.getTodos()
+        todoEvents = todos.toEvents(exams)
+        cal.addEvents(todoEvents)
 
     return cal.getICS(icalName=config.toTermString() + "课程表")

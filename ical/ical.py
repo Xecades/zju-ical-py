@@ -13,7 +13,7 @@ class Event:
     location: str
     description: str
     start: datetime
-    end: datetime
+    end: datetime | None = None
 
     @property
     def uid(self) -> str:
@@ -28,7 +28,6 @@ class Event:
     def string(self) -> str:
         utcStr = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
         stStr = toISOString(self.start)
-        etStr = toISOString(self.end)
 
         res = f"BEGIN:VEVENT\r\nCLASS:PUBLIC\r\nCREATED:{utcStr}\r\n"
         if self.description:
@@ -38,7 +37,10 @@ class Event:
                 res += f"DESCRIPTION:{self.description}\r\n"
         res += f"DTSTAMP:{utcStr}\r\n"
         res += f"DTSTART;TZID=Asia/Shanghai:{stStr}\r\n"
-        res += f"DTEND;TZID=Asia/Shanghai:{etStr}\r\n"
+        if self.end:
+            etStr = toISOString(self.end)
+            res += f"DTEND;TZID=Asia/Shanghai:{etStr}\r\n"
+
         res += f"LAST-MODIFIED:{utcStr}\r\n"
         if self.location:
             res += f"LOCATION:{self.location}\r\n"

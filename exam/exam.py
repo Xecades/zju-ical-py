@@ -86,7 +86,7 @@ class Exam:
 class ExamTable:
     exams: list[Exam]
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.exams: list[Exam] = []
 
     def __repr__(self) -> str:
@@ -103,10 +103,12 @@ class ExamTable:
                 self.exams.append(Exam(item, ZDBK, ExamType.NoExam))
 
     def find(self, course: "Course") -> list[Exam]:
+        return self.findByClassId(course.classId)
+
+    def findByClassId(self, classId: str) -> list[Exam]:
         res = []
         for exam in self.exams:
-            if exam.classId == course.classId:
-                assert exam.name == course.name
+            if exam.classId == classId:
                 res.append(exam)
         return res
 
