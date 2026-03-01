@@ -48,13 +48,13 @@ def ugrsClassTermToQueryString(term: Term) -> str:
     return mapping[term]
 
 
-def grsGetYear(year: str, term: Term) -> str:
-    years = year.split("-")
-    if term == Term.Autumn or term == Term.Winter:
-        return years[0]
-    elif term == Term.Spring or term == Term.Summer:
-        return years[1]
-    raise ValueError(f"学年参数错误，无法从[{year}-{term.value}]中获取正确学年")
+# def grsGetYear(year: str, term: Term) -> str:
+#     years = year.split("-")
+#     if term == Term.Autumn or term == Term.Winter:
+#         return years[0]
+#     elif term == Term.Spring or term == Term.Summer:
+#         return years[1]
+#     raise ValueError(f"学年参数错误，无法从[{year}-{term.value}]中获取正确学年")
 
 
 def grsClassTermToQueryString(term: Term) -> str:

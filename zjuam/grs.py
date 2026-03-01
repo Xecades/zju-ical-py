@@ -5,7 +5,7 @@ from urllib.parse import parse_qs, urlparse
 
 from loguru import logger
 
-from course.convert import grsClassTermToQueryString, grsGetYear
+from course.convert import grsClassTermToQueryString
 from course.grs_course import GRSCourseTable
 from exam.exam import ExamTable
 from utils.const import Term
@@ -118,11 +118,14 @@ class GrsZjuam(Zjuam):
     def getCourses(self, year: str, term: Term, exams: ExamTable) -> GRSCourseTable:
         logger.info(f"开始获取[{year}-{term.value}]课程信息")
         try:
-            year = grsGetYear(year, term)
+            if "-" not in year:
+                raise ValueError(f"学年参数格式错误，应为'YYYY-YYYY'格式，实际为: {year}")
+            
+            year_start = year.split("-")[0]
             termQuery = grsClassTermToQueryString(term)
             time.sleep(self.request_delay)
 
-            courseUrl = self.COURSE_URL + f"xn={year}&pkxq={termQuery}"
+            courseUrl = self.COURSE_URL + f"xn={year_start}&pkxq={termQuery}"
             res = self.r.get(courseUrl, headers={"X-Access-Token": self._token}).json()
             assert res.get("success"), "课程信息获取失败"
             res = res["result"]["kcbMap"]
