@@ -120,7 +120,7 @@ class GrsZjuam(Zjuam):
         try:
             if "-" not in year:
                 raise ValueError(f"学年参数格式错误，应为'YYYY-YYYY'格式，实际为: {year}")
-            
+
             year_start = year.split("-")[0]
             termQuery = grsClassTermToQueryString(term)
             time.sleep(self.request_delay)
