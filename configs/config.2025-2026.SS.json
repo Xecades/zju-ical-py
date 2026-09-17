@@ -1,0 +1,64 @@
+{
+    "lastUpdated": 20260120,
+    "tweaks": [
+        {
+            "TweakType": "Move",
+            "Description": "[元旦] 1月1日（周四）停课，安排在1月6日（周二）补课",
+            "From": 20260101,
+            "To": 20260106
+        },
+        {
+            "TweakType": "Exchange",
+            "Description": "[元旦] 1月2日（周五）与1月4日（周日）的课对调",
+            "From": 20260102,
+            "To": 20260104
+        },
+        {
+            "TweakType": "Clear",
+            "Description": "[清明节] 4月6日（周一）停课",
+            "From": 20260406,
+            "To": 20260406
+        },
+        {
+            "TweakType": "Clear",
+            "Description": "[劳动节] 5月1日（周五）停课",
+            "From": 20260501,
+            "To": 20260501
+        },
+        {
+            "TweakType": "Move",
+            "Description": "[劳动节] 5月4日（周一）停课，安排在6月22日（周一）补课",
+            "From": 20260504,
+            "To": 20260622
+        },
+        {
+            "TweakType": "Clear",
+            "Description": "[劳动节] 5月5日（周二）停课",
+            "From": 20260505,
+            "To": 20260505
+        },
+        {
+            "TweakType": "Move",
+            "Description": "[端午节] 6月19日（周五）停课，安排在6月23日（周二）补课",
+            "From": 20260619,
+            "To": 20260623
+        }
+    ],
+    "termConfigs": [
+        {
+            "Year": "2025-2026",
+            "Term": "春",
+            "Begin": 20260302,
+            "End": 20260426,
+            "FirstWeekNo": 1
+        },
+        {
+            "Year": "2025-2026",
+            "Term": "夏",
+            "Begin": 20260427,
+            "End": 20260621,
+            "FirstWeekNo": 1
+        }
+    ],
+    "classTerms": ["2025-2026:春", "2025-2026:夏"]
+}
